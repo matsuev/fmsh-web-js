@@ -24,3 +24,11 @@
    border-radius: 50%;
    border: 20px solid red;
 }
+
+.brick {
+   position: absolute;
+   width: 80px;
+   height: 30px;
+   background-color: burlywood;
+   border: 1px solid black;
+}
