@@ -2,12 +2,23 @@ const gameBoard = document.getElementById("gameBoard")
 const racket = document.getElementById("racket")
 const ball = document.getElementById("ball")
 
-const pole = [{x:10,y:10}, {x:300,y:30}]
-
 var gameOver = false
 
+var gameLevel = [
+   { x: 100, y: 100 },
+   { x: 400, y: 100 },
+   { x: 150, y: 200 },
+   { x: 350, y: 200 },
+]
+
+gameLevel.forEach(createBrick)
+
+// for (var i=0; i < gameLevel.length; i++) {
+//    createBrick(gameLevel[i])
+// }
+
 var racketObj = {
-   Y: racket.offsetTop,
+   Y:  racket.offsetTop,
    X: racket.offsetLeft,
    L: racket.clientWidth,
    dX: 10,
@@ -17,20 +28,18 @@ var ballObj = {
    X: ball.offsetLeft,
    Y: ball.offsetTop,
    R: 20,
-   dX: 3,
-   dY: -3,
+   dX: 0,
+   dY: 0,   
 }
 
-initGame()
-
-
 function onArrowKeyDown(ev) {
-   if ((ev.code == "ArrowRight") && (racketObj.X + racketObj.L + racketObj.dX < gameBoard.clientWidth)) {
-      racketObj.X += racketObj.dX
+   if ((ev.code == "ArrowLeft") && (racketObj.X > racketObj.dX))
+   {
+      racketObj.X -= racketObj.dX
    }
 
-   if ((ev.code == "ArrowLeft") && (racketObj.X > racketObj.dX)) {
-      racketObj.X -= racketObj.dX
+   if ((ev.code == "ArrowRight") && (racketObj.X + racketObj.L + racketObj.dX < gameBoard.clientWidth)) {
+      racketObj.X += racketObj.dX
    }
 
    racket.style.left = racketObj.X + "px"
@@ -39,46 +48,37 @@ function onArrowKeyDown(ev) {
 document.addEventListener("keydown", onArrowKeyDown)
 
 function moveBall() {
-   if (ballObj.X + ballObj.dX < 0) {
+   if (ballObj.dX < 0 && ballObj.X <= ballObj.dX) {
       ballObj.dX *= -1
    }
 
-   if (ballObj.X + ballObj.dX + 2*ballObj.R > gameBoard.clientWidth) {
+   if (ballObj.dY < 0 && ballObj.Y <= ballObj.dY) {
+      ballObj.dY *= -1
+   }
+
+   if (ballObj.dX > 0
+      && ballObj.X + ball.offsetWidth + ballObj.dX >= gameBoard.clientWidth
+   ) {
       ballObj.dX *= -1
    }
 
-   if (ballObj.Y + ballObj.dY < 0) {
+   if (ballObj.dY > 0
+      && ballObj.Y + ball.offsetHeight + ballObj.dY >= gameBoard.clientHeight   
+   ) {
+      gameOver = true
+   }
+
+   if (ballObj.Y + ball.offsetHeight + ballObj.dY >= racketObj.Y
+      && ballObj.X + ballObj.R >= racketObj.X
+      && ballObj.X + ballObj.R <= racketObj.X + racket.clientWidth
+   ) {
       ballObj.dY *= -1
    }
 
-   if (ballObj.Y + ballObj.dY + 2*ballObj.R > gameBoard.clientHeight) {
-      ballObj.dY *= -1
-   }
-
-   // if ((ballObj.Y + ballObj.dY + 2*ballObj.R >= racketObj.Y)
-   //    && (ballObj.X - ballObj.R >= racketObj.X)
-   //    && (ballObj.X + 2*ballObj.R <= racketObj.X + racketObj.L)) {
-   //       ballObj.dY *= -1
-   //    }
-
-
-   // if (ballObj.Y + ballObj.dY + 2*ballObj.R > gameBoard.clientHeight) {
-   //    gameOver = true
-   //    alert("Game over!")
-   // }
-
-   // Math.sin()
-
-
-   var bricks = document.getElementsByClassName("brick")
-   for (var i=0; i<bricks.length; i++) {
-      var br = bricks[i]
-
-// Условия пересечения с шариком
-
-      gameBoard.removeChild(br)
-   }
-
+   // Проверяем на столкновение с кирпичами
+   
+   // var bricks = document.getElementsByClassName("brick")
+   // bricks.forEach(checkCollapse)
 
    ballObj.X += ballObj.dX
    ballObj.Y += ballObj.dY
@@ -88,25 +88,22 @@ function moveBall() {
 
    if (!gameOver) {
       window.requestAnimationFrame(moveBall)
+   } else {
+      alert("Game Over")
    }
-   
 }
 
 window.requestAnimationFrame(moveBall)
 
-
-
-
-function initGame() {
-   for (var i=0; i<pole.length; i++) {
-      createNewBrick(pole[i].x, pole[i].y)
-   }
-}
-
-function createNewBrick(x, y) {
+function createBrick(brick) {
    var el = document.createElement("div")
    el.classList.add("brick")
-   el.style.left = x + "px"
-   el.style.top = y + "px"
+   el.style.top = brick.y + "px"
+   el.style.left = brick.x + "px"
+
    gameBoard.appendChild(el)
 }
+
+// 
+// gameBoard.removeChild()
+// 
