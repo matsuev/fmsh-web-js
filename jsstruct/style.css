@@ -1,0 +1,9 @@
+.brick {
+   position: absolute;
+   width: 100px;
+   height: 25px;
+}
+
+body {
+   position: relative;
+}

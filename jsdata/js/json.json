@@ -1,0 +1,16 @@
+
+
+{
+   "Name": "Alex",
+   "Email": "alex.matsuev@gmail.com",
+   "Age": 44,
+   "Friends": [
+      {
+         "Name": "Vasya"
+      },
+      {
+         "Name": "Petya"
+      }
+   ]
+}
+
